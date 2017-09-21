@@ -1,0 +1,17 @@
+{
+  "name": "tmclient2",
+  "description": "",
+  "main": "server.js",
+  "authors": [
+    "Michael Prattinger <mprattinger@outlook.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

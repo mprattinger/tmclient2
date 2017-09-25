@@ -9,6 +9,7 @@ const uiClass = require("./ui/ui");
 const rfidCard = require("./hardware/rfidCard");
 const statusBtn = require("./hardware/statusButton");
 const buzzer = require("./hardware/buzzer");
+const tmService = require("./services/timeManagerService");
 
 const _ = require("lodash");
 
@@ -22,6 +23,9 @@ class Main {
 
     InitApplication() {
         var that = this;
+        
+        winston.info("Initializing application....");
+
         return new Promise((resolve) => {
             that.webServer = new httpServer();
             that.hardware = new hardware()
@@ -29,41 +33,66 @@ class Main {
             that.rfidCard = new rfidCard();
             that.statusBtn = new statusBtn();
             that.buzzer = new buzzer();
+            that.tmService = new tmService();
 
             Promise.all([that.webServer.runServer(),
             that.hardware.initHardware(),
             that.ui.init(),
-            that.statusBtn.init()])
+            that.statusBtn.init(),
+            that.tmService.init()])
                 .then((data) => {
+                    winston.info("Application initialized! Run socket.io....")
                     that.socket = sockets.listen(that.webServer.server);
                     resolve();
                 }).catch((err) => {
                     throw err;
                 });
 
-            that.ui.on("lcdUpdate", (data)=>{
+            that.ui.on("lcdUpdate", (data) => {
                 that.lcdUpdate(data);
             });
-            that.ui.on("error", (data)=>{});
-            that.rfidCard.on("cardDetected", (data)=>{
-                that.cardFound(data);
+            that.ui.on("error", (data) => { });
+            that.rfidCard.on("cardDetected", (uuid) => {
+                that.cardFound(uuid);
             });
-            that.statusBtn.on("statusButtonPressed", ()=>{
+            that.statusBtn.on("statusButtonPressed", () => {
                 that.statusButtonPressed();
             });
-            that.buzzer.on("error", (data)=>{
+            that.buzzer.on("error", (data) => {
                 winston.error(data.msg, data.error);
+            });
+            that.tmService.on("UserRegistered", (data) => {
+                var item = _.find(that.ui.views, (item) => {
+                    return item.name === "sendCardServer";
+                });
+                if (item) item.view.setUnactive();
+                item = null;
+                var item = _.find(that.ui.views, (item) => {
+                    return item.name === "userRegistered";
+                });
+                if (item) item.view.setRegistered(data);
+            });
+            that.tmService.on("UnknownTagId", (uuid) => {
+                //Info anzeigen
+                var item = _.find(that.ui.views, (item) => {
+                    return item.name === "unknownCard";
+                });
+                if (item) item.view.setUnknownCard(uuid);
+                //Chip speichern
+            });
+            that.tmService.on("error", (err) => {
+                winston.error(err.message, err.error);
             });
         });
     }
 
     lcdUpdate(data) {
         var that = this;
-        if(that.socket) that.socket.emit("lcdUpdated", data);
+        if (that.socket) that.socket.emit("lcdUpdated", data);
         winston.info("Lcd updated! line1: " + data.line1 + ", line2: " + data.line2);
     }
 
-    cardFound(data) {
+    cardFound(uuid) {
         var that = this;
         //Es wurde ein Chip erkannt
         // -> Beep
@@ -72,16 +101,20 @@ class Main {
         var item = _.find(that.ui.views, (item) => {
             return item.name === "sendCardServer";
         });
-        if(item) item.view.setActive();
+        if (item) item.view.setActive();
         // -> Call auf Server
-    }
-
-    statusButtonPressed(){
-        var that = this;
-        var item = _.find(that.ui.views, (item)=>{
+        var status = _.find(that.ui.views, (item) => {
             return item.name === "statusView";
         });
-        if(item) item.view.manualOverwrite();
+        that.tmService.sendCard(uuid, status.go);
+    }
+
+    statusButtonPressed() {
+        var that = this;
+        var item = _.find(that.ui.views, (item) => {
+            return item.name === "statusView";
+        });
+        if (item) item.view.manualOverwrite();
     }
 
     RunProgramLoop() {

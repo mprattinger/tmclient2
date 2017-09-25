@@ -1,5 +1,7 @@
 "use strict";
 
+const ver = "dev";
+
 const winston = require("winston");
 const config = require("../package.json");
 const httpBase = require("./httpBase");
@@ -9,20 +11,21 @@ class TimeManagerService extends httpBase {
 
     constructor(){
         super();
-
-        this.server = "";
-        this.port = 0;
+        
         this.tmApiUrl = "";
     }
 
     init(){
         var that = this;
+
+        winston.info("Initializing TimeManagerService....")
+
         return Promise.all([that.loadConfg()]);
     }
 
     sendCard(uuid, go){
         var that = this;
-        loadConfg().then((data)=>{
+        that.loadConfg().then((data)=>{
             var payload = that.preparePayload(uuid, (go ? "Out" : "In"));
             winston.info("Payload is " + JSON.stringify(payload));
 
@@ -79,6 +82,7 @@ class TimeManagerService extends httpBase {
             that.server = that.config.server;
             that.port = that.config.port;
             that.tmApiUrl = that.config.tmapi;
+            resolve();
         });
     }
 }

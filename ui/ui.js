@@ -5,6 +5,8 @@ const lcdMod = require("../hardware/lcd");
 const dateFormat = require("dateformat");
 const statusViewMod = require("./views/statusView");
 const sendCardServerMod = require("./views/sendCardToServerView");
+const userRegisteredMod = require("./views/userRegisteredView");
+const unknowCardMod = require("./views/unknownCardView");
 
 class UI extends lcdMod {
 
@@ -14,6 +16,8 @@ class UI extends lcdMod {
         this.views = [];
         this.views.push({ name: "statusView", view: new statusViewMod()});
         this.views.push({ name: "sendCardServer", view: new sendCardServerMod()});
+        this.views.push({ name: "userRegistered", view: new userRegisteredMod()});
+        this.views.push({ name: "unknownCard", view: new unknowCardMod()});
     }
 
     CheckUI() {

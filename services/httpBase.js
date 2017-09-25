@@ -5,7 +5,7 @@ const ver = "dev";
 var http = require("http");
 const os = require("os");
 if(ver == "dev"){
-    http = require("./mocks/httpMock");
+    http = require("./mocks/http-mock");
 }
 const httpError = require("./httpError");
 
@@ -15,9 +15,13 @@ class HttpBase extends events.EventEmitter {
 
     constructor(){
         super();
+
+        this.server = "";
+        this.port = 0;
     }
 
     prepareOptions(method, path){
+        var that = this;
         return {
             "hostname": that.server,
             "port": that.port,

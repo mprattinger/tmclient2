@@ -17,7 +17,7 @@ class MFRC522Mock{
             var diff = (curr.getTime() - this.firstTime.getTime()) / 1000;
             diff = Math.round(diff);
             if(diff == 5 && !this.cardFound){
-                //ret.status = true;
+                ret.status = true;
             }
             return ret;
         }

@@ -21,6 +21,8 @@ class HttpServer {
     runServer() {
         var that = this;
 
+        winston.info("Initializing web server...")
+
         return new Promise((resolve) => {
             that.app = express();
 

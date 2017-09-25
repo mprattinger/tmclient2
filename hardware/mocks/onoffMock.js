@@ -11,7 +11,7 @@ this.pin = pin;
     watch(callback){
         winston.info("Would wait for input...")
         setTimeout(()=> {
-            callback(null, 1);
+            //callback(null, 1);
         }, 10000);
     }
 

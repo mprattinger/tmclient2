@@ -10,6 +10,7 @@ const rfidCard = require("./hardware/rfidCard");
 const statusBtn = require("./hardware/statusButton");
 const buzzer = require("./hardware/buzzer");
 const tmService = require("./services/timeManagerService");
+const heartBeat = require("./services/heartbeatService");
 
 const _ = require("lodash");
 
@@ -34,12 +35,14 @@ class Main {
             that.statusBtn = new statusBtn();
             that.buzzer = new buzzer();
             that.tmService = new tmService();
+            that.heartBeat = new heartBeat();
 
             Promise.all([that.webServer.runServer(),
             that.hardware.initHardware(),
             that.ui.init(),
             that.statusBtn.init(),
-            that.tmService.init()])
+            that.tmService.init(),
+            that.heartBeat.init()])
                 .then((data) => {
                     winston.info("Application initialized! Run socket.io....")
                     that.socket = sockets.listen(that.webServer.server);
@@ -75,6 +78,11 @@ class Main {
             that.tmService.on("UnknownTagId", (uuid) => {
                 //Info anzeigen
                 var item = _.find(that.ui.views, (item) => {
+                    return item.name === "sendCardServer";
+                });
+                if (item) item.view.setUnactive();
+                item = null;
+                item = _.find(that.ui.views, (item) => {
                     return item.name === "unknownCard";
                 });
                 if (item) item.view.setUnknownCard(uuid);
@@ -82,6 +90,24 @@ class Main {
             });
             that.tmService.on("error", (err) => {
                 winston.error(err.message, err.error);
+                var item = _.find(that.ui.views, (item) => {
+                    return item.name === "sendCardServer";
+                });
+                if (item) item.view.setUnactive();
+                item = null;
+                item = _.find(that.ui.views, (item) => {
+                    return item.name === "error";
+                });
+                if (item) item.view.setError("Error", err.type);
+            });
+            that.heartBeat.on("ping-ok",()=>{
+
+            });
+            that.heartBeat.on("error", (err)=>{
+                var item = _.find(that.ui.views, (item) => {
+                    return item.name === "error";
+                });
+                if (item) item.view.setError("Check conn.", err.type);
             });
         });
     }
@@ -122,7 +148,8 @@ class Main {
 
         setTimeout(() => {
             Promise.all([that.ui.CheckUI(),
-            that.rfidCard.checkCard()]).then((data) => {
+            that.rfidCard.checkCard(),
+            that.heartBeat.checkNsend()]).then((data) => {
                 if (that.run) return that.RunProgramLoop();
                 else winston.info("MainLoop stopped");
             }).catch((err) => {

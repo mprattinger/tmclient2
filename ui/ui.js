@@ -7,6 +7,7 @@ const statusViewMod = require("./views/statusView");
 const sendCardServerMod = require("./views/sendCardToServerView");
 const userRegisteredMod = require("./views/userRegisteredView");
 const unknowCardMod = require("./views/unknownCardView");
+const errorView = require("./views/errorView");
 
 class UI extends lcdMod {
 
@@ -18,6 +19,7 @@ class UI extends lcdMod {
         this.views.push({ name: "sendCardServer", view: new sendCardServerMod()});
         this.views.push({ name: "userRegistered", view: new userRegisteredMod()});
         this.views.push({ name: "unknownCard", view: new unknowCardMod()});
+        this.views.push({ name: "error", view: new errorView()});
     }
 
     CheckUI() {

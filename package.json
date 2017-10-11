@@ -13,12 +13,16 @@
     "dev": {
       "server": "localhost",
       "port": 56507,
-      "tmapi": "/api/timemanager" 
+      "tmapi": "/api/timemanager",
+      "heartbeatInterval": 30000,
+      "heartbeatIntervalErr": 5000
     },
     "prod": {
       "server": "prattpc",
       "port": 80,
-      "tmapi": "/api/timemanager"
+      "tmapi": "/api/timemanager",
+      "heartbeatInterval": 600000,
+      "heartbeatIntervalErr": 5000
     }
   },
   "dependencies": {
@@ -32,6 +36,8 @@
     "lodash": "^4.17.4",
     "serve-favicon": "^2.4.4",
     "socket.io": "^2.0.3",
+    "superagent": "^3.6.0",
+    "superagent-mocker": "^0.5.2",
     "winston": "^2.3.1",
     "winston-daily-rotate-file": "^1.7.0"
   }

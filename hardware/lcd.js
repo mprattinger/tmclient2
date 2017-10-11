@@ -24,7 +24,7 @@ class Lcd extends events.EventEmitter {
         var that = this;
         return new Promise((resolve) => {
             that.cols = 16;
-            that.row = 2;
+            that.rows = 2;
             that.lcd = new lcdMod({
                 rs: 4,
                 e: 17,

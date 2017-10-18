@@ -4,7 +4,7 @@ var fs = require("fs");
 
 module.exports.configLogger = function () {
     winston.remove(winston.transports.Console);
-    winston.add(winston.transports.Console, { level: "info", colorize: true });
+    winston.add(winston.transports.Console, { level: "info", colorize: true, "timestap": true });
 
     var winstonLogDir = path.join(global.rootDir, "log");
     if (!fs.existsSync(winstonLogDir)) {

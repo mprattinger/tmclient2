@@ -1,6 +1,6 @@
 "use strict";
 
-const ver = "dev";
+const ver = "";//"dev";
 
 const winston = require("winston");
 const events = require("events");
@@ -112,7 +112,7 @@ class HeartbeatService extends events.EventEmitter {
     };
 }
 
-if (dev == true) {
+if (ver == "dev") {
     const mock = require("superagent-mocker")(superagent);
     const mockResponse = require("./mocks/superagent-mock-response");
     mock.timeout = 1000;

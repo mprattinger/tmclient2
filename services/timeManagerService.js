@@ -1,6 +1,6 @@
 "use strict";
 
-const ver = "dev";
+//const ver = "dev";
 
 const winston = require("winston");
 const events = require("events");

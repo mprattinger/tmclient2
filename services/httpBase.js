@@ -1,6 +1,6 @@
 "use strict";
 
-const ver = "dev";
+const ver = "";//"dev";
 
 var http = require("http");
 const os = require("os");

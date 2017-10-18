@@ -15,6 +15,7 @@ class HeartbeatService extends events.EventEmitter {
 
         this.pingUrl = "/ping";
         this.lastCheck = Date.now();
+        this.lastCheck.setDate(this.lastCheck.getDate() - 1);
         this.intervalMs = 0;
         this.heartbeatError = false;
         this.sending = false;

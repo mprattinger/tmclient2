@@ -7,7 +7,10 @@ class MFRC522Mock{
             this.cardFound = false;
         }
     
-    
+        init(){
+            
+        }
+
         findCard(){
             var ret = {};
             

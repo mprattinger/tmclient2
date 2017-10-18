@@ -7,7 +7,8 @@ const os = require("os");
 if (os.platform() == "linux") {
     readerModule = require("mfrc522-rpi")
 } else {
-    readerModule = new require("./mocks/mfrc522-mock");
+    var reqRM = require("./mocks/mfrc522-mock");
+    readerModule = new reqRM();
 }
 
 class RfidCard extends events.EventEmitter{
@@ -15,7 +16,7 @@ class RfidCard extends events.EventEmitter{
     constructor(){
         super();
         this.reader = readerModule;
-	this.reader.init();
+	    this.reader.init();
         this.lastCardDetected = new Date();
     }
 

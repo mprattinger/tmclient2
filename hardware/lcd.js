@@ -1,7 +1,7 @@
 "use strict";
 
 const events = require("events");
-const winsteon = require("winston");
+const winston = require("winston");
 
 var lcdMod = null;
 const os = require("os");

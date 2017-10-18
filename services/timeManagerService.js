@@ -33,12 +33,12 @@ class TimeManagerService extends events.EventEmitter {
             winston.info("Payload is " + JSON.stringify(payload));
             return that.sendCardInternal(payload);
         })
-        .then(()=>{
+            .then(() => {
 
-        })
-        .catch((err) => {
-            that.emit("error", err);
-        });
+            })
+            .catch((err) => {
+                that.emit("error", err);
+            });
     }
 
     sendCardInternal(payload) {
@@ -94,18 +94,22 @@ class TimeManagerService extends events.EventEmitter {
     loadConfg() {
         var that = this;
         return new Promise((resolve) => {
-            //config laden
-            that.config = null;
-            if (ver == "dev") {
-                that.config = config.settings.dev;
-            } else {
-                that.config = config.settings.prod;
+            try {
+                //config laden
+                that.config = null;
+                if (ver == "dev") {
+                    that.config = config.settings.dev;
+                } else {
+                    that.config = config.settings.prod;
+                }
+                that.server = that.config.server;
+                that.port = that.config.port;
+                that.tmApiUrl = that.server + ":" + that.port + that.config.tmapi;
+                winston.info("Resolving tmservice...");
+                resolve();
+            } catch (ex) {
+                throw ex;
             }
-            that.server = that.config.server;
-            that.port = that.config.port;
-            that.tmApiUrl = that.server + ":" + that.port + that.config.tmapi;
-            winston.info("Resolving tmservice...");
-            resolve();
         });
     }
 }

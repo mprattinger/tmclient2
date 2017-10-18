@@ -31,8 +31,8 @@ class HttpServer {
             that.app.use(cookieParser());
             that.app.use(express.static(path.join(__dirname, "public")));
 
-            that.app.use('/lib', express.static(__dirname + '/bower_components'));
-            that.app.use('/lib2', express.static(__dirname + '/node_modules'));
+            that.app.use('/lib', express.static(path.join(__dirname, 'bower_components'));
+            that.app.use('/lib2', express.static(path.join(__dirname,'node_modules')));
 
             that.app.use((req, res, next) => {
                 res.header("Cache-Control", "no-cache, no-store, must-revalidate");

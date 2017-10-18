@@ -92,8 +92,7 @@ class HeartbeatService extends events.EventEmitter {
             that.server = that.config.server + ":" + that.config.port + that.pingUrl;
             if (that.heartbeatError) that.intervalMs = that.config.heartbeatIntervalErr;
             else that.intervalMs = that.config.heartbeatInterval;
-
-            winston.info("Resolving heartbeatservice...");
+            
             resolve();
         });
     }

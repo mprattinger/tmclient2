@@ -100,12 +100,11 @@ class HeartbeatService extends events.EventEmitter {
         var that = this;
 
         if (that.sending) return false;
-        if (!that.lastCheck) return true;
         if(that.firstTime){
             that.firstTime = false;
             return true;
         }
-        
+
         var checkDate = new Date(that.lastCheck);
         checkDate.setMilliseconds(checkDate.getMilliseconds() + that.intervalMs);
 

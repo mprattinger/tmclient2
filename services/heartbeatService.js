@@ -13,12 +13,9 @@ class HeartbeatService extends events.EventEmitter {
     constructor() {
         super();
 
+        this.firstTime = true;
         this.pingUrl = "/ping";
-
-        var d = Date.now();
-        d = d.setMilliseconds(d.getMilliseconds() - (24*60*60*1000));
-
-        this.lastCheck = d;
+        this.lastCheck = Date.now();
         this.intervalMs = 0;
         this.heartbeatError = false;
         this.sending = false;
@@ -104,7 +101,11 @@ class HeartbeatService extends events.EventEmitter {
 
         if (that.sending) return false;
         if (!that.lastCheck) return true;
-
+        if(that.firstTime){
+            that.firstTime = false;
+            return true;
+        }
+        
         var checkDate = new Date(that.lastCheck);
         checkDate.setMilliseconds(checkDate.getMilliseconds() + that.intervalMs);
 

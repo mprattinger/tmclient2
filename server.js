@@ -67,6 +67,7 @@ class HttpServer {
                 winston.log("info", "Express server listening on port " + that.server.address().port);
             });
 
+            winston.info("Resolving webserver...");
             resolve({
                 "expressApp": that.app,
                 "server": that.server

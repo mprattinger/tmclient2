@@ -104,6 +104,7 @@ class TimeManagerService extends events.EventEmitter {
             that.server = that.config.server;
             that.port = that.config.port;
             that.tmApiUrl = that.server + ":" + that.port + that.config.tmapi;
+            winston.info("Resolving tmservice...");
             resolve();
         });
     }

@@ -4,7 +4,6 @@ const winston = require("winston");
 const logger = require("./logger");
 const sockets = require("./sockets/sockets");
 const httpServer = require("./server");
-const hardware = require("./hardware/hardware");
 const uiClass = require("./ui/ui");
 const rfidCard = require("./hardware/rfidCard");
 const statusBtn = require("./hardware/statusButton");
@@ -29,7 +28,6 @@ class Main {
 
         return new Promise((resolve) => {
             that.webServer = new httpServer();
-            that.hardware = new hardware()
             that.ui = new uiClass();
             that.rfidCard = new rfidCard();
             that.statusBtn = new statusBtn();
@@ -38,7 +36,6 @@ class Main {
             that.heartBeat = new heartBeat();
 
             Promise.all([that.webServer.runServer(),
-            that.hardware.initHardware(),
             that.ui.init(),
             that.statusBtn.init(),
             that.tmService.init(),

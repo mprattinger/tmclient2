@@ -28,6 +28,7 @@ class StatusButton extends events.EventEmitter{
             that.btn.watch((err, val)=>{
                 if(val == 1) that.emit("statusButtonPressed");
             });
+            winston.info("Resolving status button...");
             return resolve();
         });
     }

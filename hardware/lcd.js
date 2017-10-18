@@ -22,6 +22,9 @@ class Lcd extends events.EventEmitter {
 
     init() {
         var that = this;
+
+        winston.info("Initializing ui...")
+
         return new Promise((resolve) => {
             that.cols = 16;
             that.rows = 2;
@@ -36,6 +39,7 @@ class Lcd extends events.EventEmitter {
             that.lcd.on("ready", () => {
                 that.lcd.clear((err) => {
                     if (err) throw err;
+                    winston.info("Resolving ui...");
                     resolve();
                 });
             });

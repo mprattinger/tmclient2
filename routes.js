@@ -1,10 +1,13 @@
 "use strict";
 
 const express = require("express");
+const events = require("events");
 
-class Routes {
+class Routes extends events.EventEmitter {
 
     constructor(){
+        super();
+        
         this.router = express.Router();
         this._createRoutes
     }
@@ -25,6 +28,7 @@ class Routes {
         that.router.route("/simulateCard").post((req, res)=>{
             var uid = req.body.card;
             //Send card
+            this.emit("simucard", uid);
             res.statusCode = 200;
         });
 

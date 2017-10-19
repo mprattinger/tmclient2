@@ -129,7 +129,8 @@ class Main {
         var status = _.find(that.ui.views, (item) => {
             return item.name === "statusView";
         });
-        that.tmService.sendCard(uuid, status.go);
+        winston.info("Sending card to server uuid: " + uuid + ", status is: " + status.view.go);
+        that.tmService.sendCard(uuid, status.view.go);
     }
 
     statusButtonPressed() {

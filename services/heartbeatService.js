@@ -1,7 +1,5 @@
 "use strict";
 
-const ver = "";//"dev";
-
 const winston = require("winston");
 const events = require("events");
 const config = require("../package.json");
@@ -10,7 +8,7 @@ const superagent = require("superagent");
 
 class HeartbeatService extends events.EventEmitter {
 
-    constructor() {
+    constructor(devMode) {
         super();
 
         this.firstTime = true;
@@ -19,6 +17,8 @@ class HeartbeatService extends events.EventEmitter {
         this.intervalMs = 0;
         this.heartbeatError = false;
         this.sending = false;
+
+        if(devMode) this.activateMocker();
     }
 
     init() {
@@ -114,25 +114,25 @@ class HeartbeatService extends events.EventEmitter {
             return true;
         }
         else return false;
-    };
-}
+    }
 
-if (ver == "dev") {
-    const mock = require("superagent-mocker")(superagent);
-    const mockResponse = require("./mocks/superagent-mock-response");
-    mock.timeout = 1000;
-    mock.get("localhost:56507/ping", (req) => {
-        winston.info("Would call path prattpc:80/api/timemanager");
-        var data = "pong";
-        var dataStr = data
-        var res = new mockResponse();
-        res.body = data;
-        res.text = dataStr;
-        res.status = 200;
-        res.statusCode = this.status;
-        winston.info("Http woud send data " + dataStr);
-        return res;
-    });
+    activateMocker(){
+        const mock = require("superagent-mocker")(superagent);
+        const mockResponse = require("./mocks/superagent-mock-response");
+        mock.timeout = 1000;
+        mock.get("localhost:56507/ping", (req) => {
+            winston.info("Would call path prattpc:80/api/timemanager");
+            var data = "pong";
+            var dataStr = data
+            var res = new mockResponse();
+            res.body = data;
+            res.text = dataStr;
+            res.status = 200;
+            res.statusCode = this.status;
+            winston.info("Http woud send data " + dataStr);
+            return res;
+        });
+    }
 }
 
 module.exports = HeartbeatService;

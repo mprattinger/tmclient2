@@ -11,10 +11,12 @@ const superagent = require("superagent");
 
 class TimeManagerService extends events.EventEmitter {
 
-    constructor() {
+    constructor(devMode) {
         super();
 
         this.tmApiUrl = "";
+
+        if (devMode) this.activateMocker();
     }
 
     init() {
@@ -112,22 +114,24 @@ class TimeManagerService extends events.EventEmitter {
             }
         });
     }
-}
 
-const mock = require("superagent-mocker")(superagent);
-const mockResponse = require("./mocks/superagent-mock-response");
-mock.timeout = 1000;
-mock.post("localhost:56507/api/timemanager", (req) => {
-    winston.info("Would call path prattpc:80/api/timemanager");
-    var data = { "firstName": "Karin", "lastName": "Seidl", "saldo": "12:15" };
-    var dataStr = JSON.stringify(data);
-    var res = new mockResponse();
-    res.body = data;
-    res.text = dataStr;
-    res.status = 200;
-    res.statusCode = this.status;
-    winston.info("Http woud send data " + dataStr);
-    return res;
-});
+    activateMocker(){
+        const mock = require("superagent-mocker")(superagent);
+        const mockResponse = require("./mocks/superagent-mock-response");
+        mock.timeout = 1000;
+        mock.post("localhost:56507/api/timemanager", (req) => {
+            winston.info("Would call path prattpc:80/api/timemanager");
+            var data = { "firstName": "Karin", "lastName": "Seidl", "saldo": "12:15" };
+            var dataStr = JSON.stringify(data);
+            var res = new mockResponse();
+            res.body = data;
+            res.text = dataStr;
+            res.status = 200;
+            res.statusCode = this.status;
+            winston.info("Http woud send data " + dataStr);
+            return res;
+        });
+    }
+}
 
 module.exports = TimeManagerService;

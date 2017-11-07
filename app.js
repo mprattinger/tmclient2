@@ -32,8 +32,8 @@ class Main {
             that.rfidCard = new rfidCard();
             that.statusBtn = new statusBtn();
             that.buzzer = new buzzer();
-            that.tmService = new tmService();
-            that.heartBeat = new heartBeat();
+            that.tmService = new tmService(this.devMode);
+            that.heartBeat = new heartBeat(this.devMode);
 
             Promise.all([that.webServer.runServer(),
             that.ui.init(),
@@ -155,9 +155,20 @@ class Main {
             });
         }, 200)
     }
+
+    setDevMode(){
+        this.devMode = true;
+    }
 }
 
 var main = new Main();
+
+if(process.argv.length > 0){
+    if(_.find(process.argv, (argv)=>{
+        return argv === "-d" || argv == "--dev"; 
+    })) main.setDevMode();
+}
+
 main.InitApplication().then((data) => {
     winston.info("TMC gestartet!");
     main.RunProgramLoop();

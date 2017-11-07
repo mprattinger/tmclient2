@@ -19,6 +19,7 @@ class HeartbeatService extends events.EventEmitter {
         this.sending = false;
 
         if(devMode) this.activateMocker();
+        this.devMode = devMode;
     }
 
     init() {
@@ -82,7 +83,7 @@ class HeartbeatService extends events.EventEmitter {
         return new Promise((resolve) => {
             //config laden
             that.config = null;
-            if (ver == "dev") {
+            if (that.devMode) {
                 that.config = config.settings.dev;
             } else {
                 that.config = config.settings.prod;

@@ -17,6 +17,7 @@ class TimeManagerService extends events.EventEmitter {
         this.tmApiUrl = "";
 
         if (devMode) this.activateMocker();
+        this.devMode = devMode;
     }
 
     init() {
@@ -99,7 +100,7 @@ class TimeManagerService extends events.EventEmitter {
             try {
                 //config laden
                 that.config = null;
-                if (ver == "dev") {
+                if (that.devMode) {
                     that.config = config.settings.dev;
                 } else {
                     that.config = config.settings.prod;

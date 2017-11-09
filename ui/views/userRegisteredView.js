@@ -28,8 +28,10 @@ class UserRegisteredView extends base {
     }
 
     setRegistered(data){
+        //Saldo-Berechnung fehlerhaft -> Mal ausblenden und info ausgeben
         this.name = data.firstName + " " + data.lastName;
-        this.saldo = data.saldo;
+        //Mal rausnehmen bis Server-Saldo-Calc is save-> this.saldo = data.saldo;
+        this.saldo = "registriert!";
         this.showTime = new Date();
     }
 }

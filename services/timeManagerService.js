@@ -34,14 +34,12 @@ class TimeManagerService extends events.EventEmitter {
         that.loadConfg().then((data) => {
             var payload = that.preparePayload(uuid, (go ? "Out" : "In"));
             winston.info("Payload is " + JSON.stringify(payload));
-            return that.sendCardInternal(payload);
-        })
-            .then(() => {
-
-            })
-            .catch((err) => {
-                that.emit("error", err);
-            });
+            that.sendCardInternal(payload)
+                .then(()=>{ return; })
+                .catch((err)=>{ that.emit("error", err); });
+        }).catch((err) => {
+            that.emit("error", err);
+        });
     }
 
     sendCardInternal(payload) {
@@ -116,7 +114,7 @@ class TimeManagerService extends events.EventEmitter {
         });
     }
 
-    activateMocker(){
+    activateMocker() {
         const mock = require("superagent-mocker")(superagent);
         const mockResponse = require("./mocks/superagent-mock-response");
         mock.timeout = 1000;

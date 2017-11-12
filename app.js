@@ -10,6 +10,7 @@ const statusBtn = require("./hardware/statusButton");
 const buzzer = require("./hardware/buzzer");
 const tmService = require("./services/timeManagerService");
 const heartBeat = require("./services/heartbeatService");
+const dbService = require("./services/databaseService");
 
 const _ = require("lodash");
 
@@ -34,15 +35,18 @@ class Main {
             that.buzzer = new buzzer();
             that.tmService = new tmService(this.devMode);
             that.heartBeat = new heartBeat(this.devMode);
+            that.dbService = new dbService();
 
             Promise.all([that.webServer.runServer(),
             that.ui.init(),
             that.statusBtn.init(),
             that.tmService.init(),
-            that.heartBeat.init()])
+            that.heartBeat.init(),
+            that.dbService.init()])
                 .then((data) => {
                     winston.info("Application initialized! Run socket.io....")
                     that.socket = sockets.listen(that.webServer.server);
+                    that.webServer.routes.db = that.dbService;
                     resolve();
                 }).catch((err) => {
                     throw err;
@@ -84,6 +88,15 @@ class Main {
                 });
                 if (item) item.view.setUnknownCard(uuid);
                 //Chip speichern
+                that.dbService.storeUnknownTag(uuid)
+                    .then((doc)=>{})
+                    .catch((err)=>{
+                        item = null;
+                        item = _.find(that.ui.views, (item) => {
+                            return item.name === "error";
+                        });
+                        if (item) item.view.setError("Error", err.type);
+                    });
             });
             that.tmService.on("error", (err) => {
                 winston.error(err.message, err.error);

@@ -40,7 +40,6 @@ class Lcd extends events.EventEmitter {
             that.lcd.on("ready", () => {
                 that.lcd.clear((err) => {
                     if (err) throw err;
-                    winston.info("Resolving ui...");
                     resolve();
                 });
             });

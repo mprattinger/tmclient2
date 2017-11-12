@@ -67,7 +67,7 @@ class TimeManagerService extends events.EventEmitter {
                                     //Die CardId wurde in der Datenbank nicht gefunden und konnte keinen Mitarbeiter zugeordnet werden
                                     winston.warn("CardID was not found in db and no employee could be determined!");
                                     //CardId merken
-                                    that.emit("UnknownTagId", uuid);
+                                    that.emit("UnknownTagId", payload.TagUid);
                                     break;
                                 default:
                                     winston.error("StatusCode " + err.status + " not processed!");
@@ -108,7 +108,6 @@ class TimeManagerService extends events.EventEmitter {
                 that.server = that.config.server;
                 that.port = that.config.port;
                 that.tmApiUrl = that.server + ":" + that.port + that.config.tmapi;
-                winston.info("Resolving tmservice...");
                 resolve();
             } catch (ex) {
                 throw ex;
@@ -119,7 +118,7 @@ class TimeManagerService extends events.EventEmitter {
     activateMocker(){
         const mock = require("superagent-mocker")(superagent);
         const mockResponse = require("./mocks/superagent-mock-response");
-        mock.timeout = 1000;
+        //mock.timeout = 1000;
         mock.post("localhost:56507/api/timemanager", (req) => {
             winston.info("Would call path prattpc:80/api/timemanager");
             var data = { "firstName": "Karin", "lastName": "Seidl", "saldo": "12:15" };
@@ -128,7 +127,8 @@ class TimeManagerService extends events.EventEmitter {
             res.body = data;
             res.text = dataStr;
             res.status = 200;
-            res.statusCode = this.status;
+            res.status = 404;
+            res.statusCode = 200;
             winston.info("Http woud send data " + dataStr);
             return res;
         });

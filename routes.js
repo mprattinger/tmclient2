@@ -9,7 +9,7 @@ class Routes extends events.EventEmitter {
         super();
         
         this.router = express.Router();
-        this._createRoutes
+        this._createRoutes();
     }
 
     _createRoutes(){
@@ -38,27 +38,27 @@ class Routes extends events.EventEmitter {
         });
 
         that.router.route("/getMissingCards").get((req, res) => {
-            // that.db.getUnknownCards().then((data) => {
-            //     res.statusCode = 200;
-            //     res.send(data);
-            // }, (err) => {
+            that.db.getUnknownCards().then((data) => {
+                res.statusCode = 200;
+                res.send(data);
+            }, (err) => {
 
-            // });
+            });
         });
 
         that.router.route("/getMissingCard/:id").get((req, res) => {
-            // if (req.params.id) {
-            //     that.db.getUnknownCard(req.params.id).then((data) => {
-            //         if (data) {
-            //             res.statusCode = 200;
-            //             res.send(data);
-            //         }
-            //     }, (err) => {
-            //         res.statusCode = 500;
-            //     });
-            // } else {
-            //     res.statusCode = 404;
-            // }
+            if (req.params.id) {
+                that.db.getUnknownCard(req.params.id).then((data) => {
+                    if (data) {
+                        res.statusCode = 200;
+                        res.send(data);
+                    }
+                }, (err) => {
+                    res.statusCode = 500;
+                });
+            } else {
+                res.statusCode = 404;
+            }
         });
 
         that.router.route("/loadEmployees").get((req, res) => {

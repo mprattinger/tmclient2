@@ -28,7 +28,7 @@ class DatabaseService {
     storeUnknownTag(uuid){
         var that = this;
 
-        winston.info("Storing unknown tag with id " + cardId);
+        winston.info("Storing unknown tag with id " + uuid);
         var doc = {
             "uuid": uuid,
             "lastTry": new Date()
@@ -65,11 +65,11 @@ class DatabaseService {
         });
     }
 
-    getUnknowCard(uuid){
+    getUnknownCard(uuid){
         var that = this;
         winston.info("Load tag with tagId " + uuid + " from database store!");
         return new Promise((resolve)=>{
-            that.db.find({"uuid": uuid}, (err, res)=>{
+            that.db.findOne({"uuid": uuid}, (err, res)=>{
                 if(err) throw err;
                 winston.info("Found tag " + res + " in database");
                 resolve(res);

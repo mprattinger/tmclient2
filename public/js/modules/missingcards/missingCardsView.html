@@ -6,7 +6,7 @@
         <div class="cards">
             <table>
                 <tr ng-repeat="card in missing">
-                    <td><a ui-sref="missingcards.detail({id:card.cardId})">{{card.cardId}}</a></td>
+                    <td><a ui-sref="missingcards.detail({id:card.uuid})">{{card.uuid}}</a></td>
                 </tr>
             </table>
         </div>
